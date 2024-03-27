@@ -1,5 +1,7 @@
 FROM php:8.2-fpm-alpine
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install packages
 RUN apk add --no-cache curl git build-base zlib-dev oniguruma-dev autoconf bash
 RUN apk add --update linux-headers
@@ -40,12 +42,7 @@ WORKDIR /var/www
 # Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ARG BUILD_MODE=dev
-RUN if [ ${BUILD_MODE} = dev ]; \
-    then \
-      composer install --no-interaction; \
-    else \
-      composer install --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader; \
-    fi;
+RUN composer install --no-interaction
 RUN chown -R www-data:www-data /var/www/vendor/
 
 EXPOSE 8080

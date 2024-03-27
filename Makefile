@@ -15,7 +15,6 @@ up:
 
 down:
 	${DOCKER_COMPOSE} down
-
 restart: stop start
 rebuild: down build up
 
