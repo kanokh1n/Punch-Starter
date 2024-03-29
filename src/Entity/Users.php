@@ -50,6 +50,11 @@ class Users
         $this->usersRoles = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

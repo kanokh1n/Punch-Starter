@@ -16,7 +16,7 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; \
 COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Postgres
-RUN apk add --no-cache libpq-dev && docker-php-ext-install pdo_pgsql
+RUN apk add --no-cache libpq-dev icu-dev && docker-php-ext-install pdo_pgsql intl
 
 # Configure non-root user.
 ARG PUID=1000
