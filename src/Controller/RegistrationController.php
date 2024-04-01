@@ -2,69 +2,83 @@
 
 namespace App\Controller;
 
-use App\Entity\Users;
-use App\Form\UsersFormType;
+use App\Entity\User;
+use App\Form\RegistrationFormType;
+use App\Security\EmailVerifier;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EmailVerifier $emailVerifier)
     {
-        $this->entityManager = $entityManager;
     }
 
-    #[Route('/registration', name: 'app_registration')]
-    public function register(Request $request): Response
+    #[Route('/register', name: 'app_register')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        // Создание нового экземпляра сущности пользователя
-        $user = new Users();
-
-        // Создание формы регистрации, связанной с сущностью пользователя
-        $form = $this->createForm(UsersFormType::class, $user);
-
-        // Обработка отправки формы
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Проверка на существование пользователя с таким же email
-            $existingUser = $this->entityManager->getRepository(Users::class)->findOneBy(['email' => $user->getEmail()]);
-            if ($existingUser instanceof Users) {
-                // Если пользователь с таким email уже существует, выведите сообщение об ошибке
-                $this->addFlash('error', 'Пользователь с таким email уже зарегистрирован.');
-                return $this->redirectToRoute('app_registration');
-            }
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
 
-            // Хеширование пароля перед сохранением в базу данных
-            $passwordHash = password_hash($user->getPasswordHash(), PASSWORD_DEFAULT);
-            $user->setPasswordHash($passwordHash);
-
-            // Установка времени создания
             $user->setCreatedAt(new \DateTimeImmutable());
 
-            // Сохранение пользователя в базе данных
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-            // Редирект на страницу с сообщением об успешной регистрации
-            return $this->redirectToRoute('registration_success');
+            // generate a signed url and email it to the user
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('mailer@your-domain.com', 'Punch_starter'))
+                    ->to($user->getEmail())
+                    ->subject('Please Confirm your Email')
+                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            );
+
+            // do anything else you need here, like send an email
+
+            return $this->redirectToRoute('homepage');
         }
 
-        // Отображение шаблона с формой регистрации
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'registrationForm' => $form,
         ]);
     }
 
-    #[Route('/registration/success', name: 'registration_success')]
-    public function registrationSuccess(): Response
+    #[Route('/verify/email', name: 'app_verify_email')]
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
-        // Отображение страницы с сообщением об успешной регистрации
-        return $this->render('registration/success.html.twig');
-    }
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        // validate email confirmation link, sets User::isVerified=true and persists
+        try {
+            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+        } catch (VerifyEmailExceptionInterface $exception) {
+            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+
+            return $this->redirectToRoute('app_register');
+        }
+
+        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        $this->addFlash('success', 'Your email address has been verified.');
+
+        return $this->redirectToRoute('app_register');
+    }
 }

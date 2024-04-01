@@ -16,7 +16,7 @@ class Pledges
 
     #[ORM\ManyToOne(inversedBy: 'pledges')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Users $user_id = null;
+    private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'pledges')]
     #[ORM\JoinColumn(nullable: false)]
@@ -33,12 +33,12 @@ class Pledges
         return $this->id;
     }
 
-    public function getUserId(): ?Users
+    public function getUserId(): ?User
     {
         return $this->user_id;
     }
 
-    public function setUserId(?Users $user_id): static
+    public function setUserId(?User $user_id): static
     {
         $this->user_id = $user_id;
 

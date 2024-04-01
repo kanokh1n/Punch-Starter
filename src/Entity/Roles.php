@@ -16,7 +16,7 @@ class Roles
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $eшtitle = null;
+    private ?string $title = null;
 
     #[ORM\OneToMany(mappedBy: 'role_id', targetEntity: UsersRoles::class, orphanRemoval: true)]
     private Collection $usersRoles;
@@ -31,14 +31,14 @@ class Roles
         return $this->id;
     }
 
-    public function geteшtitle(): ?string
+    public function getTitle(): ?string
     {
-        return $this->eшtitle;
+        return $this->title;
     }
 
-    public function seteшtitle(string $eшtitle): static
+    public function setTitle(string $title): static
     {
-        $this->eшtitle = $eшtitle;
+        $this->title = $title;
 
         return $this;
     }
