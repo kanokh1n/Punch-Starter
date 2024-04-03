@@ -19,13 +19,6 @@ class Projects
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
-    #[ORM\OneToOne(inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Statuses $status_id = null;
-
-    #[ORM\OneToOne(mappedBy: 'project_id', cascade: ['persist', 'remove'])]
-    private ?ProjectInfo $title = null;
-
     #[ORM\OneToOne(mappedBy: 'project_id', cascade: ['persist', 'remove'])]
     private ?ProjectInfo $projectInfo = null;
 
@@ -37,6 +30,10 @@ class Projects
 
     #[ORM\OneToMany(mappedBy: 'projects_id', targetEntity: Comments::class, orphanRemoval: true)]
     private Collection $comments;
+
+    #[ORM\Column(length: 255)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?string $status = null;
 
     public function __construct()
     {
@@ -58,18 +55,6 @@ class Projects
     public function setUserId(?User $user_id): static
     {
         $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getStatusId(): ?Statuses
-    {
-        return $this->status_id;
-    }
-
-    public function setStatusId(Statuses $status_id): static
-    {
-        $this->status_id = $status_id;
 
         return $this;
     }
@@ -194,6 +179,18 @@ class Projects
                 $comment->setProjectsId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
