@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block body %}
+    <style>
+        /* Общие стили */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Стили для шапки */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .auth-buttons a {
+            color: #fff;
+            text-decoration: none;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для основного контента */
+        main {
+            padding: 20px 0;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .project {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .project h2 {
+            margin-top: 0;
+        }
+
+        .project p {
+            margin-bottom: 0;
+        }
+
+        .project .btn {
+            display: block;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .project .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для подвала */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+        }
+    </style>
+
+    <header>
+        <div class="logo">
+            <a href="/main">YourLogo</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Категория 1</a></li>
+                <li><a href="#">Категория 2</a></li>
+                <li><a href="#">Категория 3</a></li>
+                <!-- Другие категории -->
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}">LogOut</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Login</a>
+                <a href="{{ path('app_register') }}">Register</a>
+            {% endif %}
+        </div>
+    </header>
+
+    {#<main>
+        <!-- Здесь будут проекты -->
+        <div class="projects">
+            {% for project in projects %}
+                <div class="project">
+                    <h2>{{ project.title }}</h2>
+                    <p>{{ project.description }}</p>
+                    <a href="{{ path('project_details', { id: project.id }) }}" class="btn">View Project</a>
+                </div>
+            {% endfor %}
+        </div>
+    </main>#}
+
+    <footer>
+        <div class="contact-info">
+            <p>Email: example@example.com</p>
+            <p>Телефон: +1234567890</p>
+            <!-- Другая контактная информация -->
+        </div>
+    </footer>
+{% endblock %}
