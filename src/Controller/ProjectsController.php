@@ -32,7 +32,6 @@ class ProjectsController extends AbstractController
         // Получаем данные о проекте из запроса
         $requestData = $request->request->all();
 
-
         // Создаем новый проект
         $project = new Projects();
 
@@ -49,6 +48,7 @@ class ProjectsController extends AbstractController
         $projectInfo->setCreatedAt(new \DateTimeImmutable());
         $projectInfo->setUpdatedAt(new \DateTimeImmutable());
         $project->setStatus('Active');
+        $projectInfo->setLikes(0);
 
         // Связываем проект с его информацией
         $project->setProjectInfo($projectInfo);

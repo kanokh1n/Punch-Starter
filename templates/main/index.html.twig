@@ -5,8 +5,9 @@
 {% block body %}
     <style>
         /* Общие стили */
-        body {
+        html, body {
             font-family: Arial, sans-serif;
+            height: 100%;
             margin: 0;
             padding: 0;
         }
@@ -15,6 +16,16 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
         }
 
         /* Стили для шапки */
@@ -110,6 +121,7 @@
             color: #fff;
             padding: 20px 0;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .contact-info p {
@@ -132,6 +144,7 @@
         <div class="auth-buttons">
             {% if app.user %}
                 <a href="{{ path('app_projects') }}" class="btn">My Projects</a>
+                <a href="{{ path('app_user') }}" class="btn">Profile</a>
                 <a href="{{ path('app_logout') }}">LogOut</a>
             {% else %}
                 <a href="{{ path('app_login') }}">Login</a>
@@ -139,25 +152,34 @@
             {% endif %}
         </div>
     </header>
-
-    {#<main>
-        <!-- Здесь будут проекты -->
-        <div class="projects">
-            {% for project in projects %}
-                <div class="project">
-                    <h2>{{ project.title }}</h2>
-                    <p>{{ project.description }}</p>
-                    <a href="{{ path('project_details', { id: project.id }) }}" class="btn">View Project</a>
+    <body>
+        <div class="wrapper">
+            <div class="content">
+                <main>
+                    <div class="projects">
+                        {% if projects %}
+                            {% for project in projects %}
+                                <div class="project">
+                                    <h2>{{ project.getProjectInfo().getTitle() }}</h2>
+                                    <p>{{ project.getProjectInfo().getDescription() }}</p>
+                                    {% if project.getProjectInfo().getProjectImg() %}
+                                        <img src="{{ project.getProjectInfo().getProjectImg() }}" alt="{{ project.getProjectInfo().getTitle() }}" class="project-image">
+                                    {% endif %}
+                                    <span class="likes">likes: {{ project.getProjectInfo().getLikes() }}</span> {# Отображение количества лайков #}
+                                    {#<a href="{{ path('project_details', { id: project.id }) }}" class="btn">View Project</a>#}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </main>
+            </div>
+            <footer>
+                <div class="contact-info">
+                    <p>Email: example@example.com</p>
+                    <p>Телефон: +1234567890</p>
+                    <!-- Другая контактная информация -->
                 </div>
-            {% endfor %}
+            </footer>
         </div>
-    </main>#}
-
-    <footer>
-        <div class="contact-info">
-            <p>Email: example@example.com</p>
-            <p>Телефон: +1234567890</p>
-            <!-- Другая контактная информация -->
-        </div>
-    </footer>
+    </body>
 {% endblock %}
