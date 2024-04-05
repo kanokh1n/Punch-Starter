@@ -38,6 +38,11 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setFio($form->get('fio')->getData());
+
+            $user->setDescription(null);
+            $user->setProfileImg(null);
+
             $user->setCreatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($user);

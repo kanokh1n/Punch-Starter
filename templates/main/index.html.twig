@@ -144,7 +144,7 @@
         <div class="auth-buttons">
             {% if app.user %}
                 <a href="{{ path('app_projects') }}" class="btn">My Projects</a>
-                <a href="{{ path('app_user') }}" class="btn">Profile</a>
+                <a href="{{ path('app_profile') }}" class="btn">Profile</a>
                 <a href="{{ path('app_logout') }}">LogOut</a>
             {% else %}
                 <a href="{{ path('app_login') }}">Login</a>

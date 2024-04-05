@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block body %}
+    <div class="profile-info">
+        <h2>Профиль пользователя</h2>
+        <p><strong>ФИО:</strong> {{ app.user.getFio() }}</p>
+        <p><strong>Email:</strong> {{ app.user.getEmail() }}</p>
+        <p><strong>Телефон:</strong> {{ app.user.getPhone() }}</p>
+        <p><strong>Описание:</strong> {{ app.user.getDescription() }}</p>
+        {% if app.user.getProfileImg() %}
+            <img src="{{ app.user.getProfileImg() }}" alt="Профильное изображение">
+        {% endif %}
+    </div>
+    <a href="{{ path('app_profile_edit') }}">Редактировать профиль</a>
+{% endblock %}
+

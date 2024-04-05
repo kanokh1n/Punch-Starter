@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <h1>Edit Profile</h1>
+    {{ form_start(editForm) }}
+    {{ form_row(editForm.email, {'value': app.user.getEmail()}) }}
+    {{ form_row(editForm.fio, {'value': app.user.getFio()}) }}
+    {{ form_row(editForm.phone, {'value': app.user.getPhone()}) }}
+    {{ form_row(editForm.description, {'value': app.user.getDescription()}) }}
+    {{ form_row(editForm.profile_img) }}
+    {{ form_row(editForm.newPassword) }}
+    {{ form_row(editForm.confirmPassword) }}
+    <button type="submit">Save</button>
+    {{ form_end(editForm) }}
+{% endblock %}

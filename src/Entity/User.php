@@ -42,9 +42,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Projects::class, orphanRemoval: true)]
     private Collection $projects;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
-    private ?UserProfile $userProfile = null;
-
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Pledges::class)]
     private Collection $pledges;
 
@@ -56,6 +53,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fio = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profile_img = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
 
     public function __construct()
     {
@@ -182,23 +191,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUserProfile(): ?UserProfile
-    {
-        return $this->userProfile;
-    }
-
-    public function setUserProfile(UserProfile $userProfile): static
-    {
-        // set the owning side of the relation if necessary
-        if ($userProfile->getUserId() !== $this) {
-            $userProfile->setUserId($this);
-        }
-
-        $this->userProfile = $userProfile;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Pledges>
      */
@@ -297,6 +289,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getFio(): ?string
+    {
+        return $this->fio;
+    }
+
+    public function setFio(?string $fio): static
+    {
+        $this->fio = $fio;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getProfileImg(): ?string
+    {
+        return $this->profile_img;
+    }
+
+    public function setProfileImg(?string $profile_img): static
+    {
+        $this->profile_img = $profile_img;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
 
         return $this;
     }
