@@ -66,12 +66,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
+    #[ORM\OneToMany(targetEntity: UsersMessages::class, mappedBy: 'user_sender', orphanRemoval: true)]
+    private Collection $sendedUsersMessages;
+
+
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->pledges = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->usersRoles = new ArrayCollection();
+        $this->sendedUsersMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -340,4 +346,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, UsersMessages>
+     */
+    public function getSendedUsersMessages(): Collection
+    {
+        return $this->sendedUsersMessages;
+    }
+
+    public function addSendedUsersMessage(UsersMessages $sendedUsersMessage): static
+    {
+        if (!$this->sendedUsersMessages->contains($sendedUsersMessage)) {
+            $this->sendedUsersMessages->add($sendedUsersMessage);
+            $sendedUsersMessage->setUserSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSendedUsersMessage(UsersMessages $sendedUsersMessage): static
+    {
+        if ($this->sendedUsersMessages->removeElement($sendedUsersMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sendedUsersMessage->getUserSender() === $this) {
+                $sendedUsersMessage->setUserSender(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

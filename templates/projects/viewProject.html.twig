@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ project.getProjectInfo().getTitle() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Общие стили */
+        html, body {
+            font-family: Arial, sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        /* Стили для шапки */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .auth-buttons a {
+            color: #fff;
+            text-decoration: none;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+
+        .auth-buttons a:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для основного контента */
+        main {
+            padding: 20px 0;
+        }
+
+        .project h2 {
+            margin-top: 0;
+        }
+
+        .project p {
+            margin-bottom: 0;
+        }
+
+        .project .btn {
+            display: block;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .project .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для подвала */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+        <header>
+            <div class="logo">
+                <a href="{{ path('app_main') }}">YourLogo</a>
+            </div>
+            <div class="auth-buttons">
+                {% if app.user %}
+                    <a href="{{ path('app_projects') }}" class="btn">My Projects</a>
+                    <a href="{{ path('app_profile') }}" class="btn">Profile</a>
+                    <a href="{{ path('app_logout') }}" class="btn">LogOut</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="btn">Login</a>
+                    <a href="{{ path('app_register') }}" class="btn">Register</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="container">
+                <h1>{{ project.getProjectInfo().getTitle() }}</h1>
+                <p>{{ project.getProjectInfo().getDescription() }}</p>
+                <p>Текущая сумма: {{ project.getProjectInfo().getCurrentAmount() }}</p>
+                <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
+                <p>Статус проекта: {{ project.getStatus() }}</p>
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="contact-info">
+                    <p>Contact us: example@example.com</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+{% endblock %}

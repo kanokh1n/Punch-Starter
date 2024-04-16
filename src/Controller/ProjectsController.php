@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Projects;
 use App\Entity\ProjectInfo;
 use App\Entity\User;
+use App\Form\ProjectsFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,7 +70,7 @@ class ProjectsController extends AbstractController
     #[Route('/projects/create', name: 'make_Project')]
     public function createProject(): Response
     {
-        return $this->render('createProject/createProject.html.twig', [
+        return $this->render('projects/createProject.html.twig', [
             'controller_name' => 'ProjectsController',
         ]);
     }
@@ -92,6 +93,22 @@ class ProjectsController extends AbstractController
         ]);
     }
 
+    #[Route('/projects/view/{id}', name: 'view_project')]
+    public function view(int $id, EntityManagerInterface $entityManager): Response
+    {
+        // Получаем проект для просмотра по его ID
+        $project = $entityManager->getRepository(Projects::class)->find($id);
+
+        // Проверяем, существует ли проект с указанным ID
+        if (!$project) {
+            throw $this->createNotFoundException('Проект не найден');
+        }
+
+        return $this->render('projects/viewProject.html.twig', [
+            'project' => $project,
+        ]);
+    }
+
     #[Route('/projects/{id}/delete', name: 'delete_project', methods: ['POST'])]
     public function delete(int $id, EntityManagerInterface $entityManager): Response
     {
@@ -109,5 +126,39 @@ class ProjectsController extends AbstractController
 
         // Перенаправляем пользователя на страницу с проектами
         return $this->redirectToRoute('app_projects');
+    }
+
+    #[Route('/projects/edit/{id}', name: 'edit_project')]
+    public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Получаем проект для редактирования по его ID
+        $project = $entityManager->getRepository(Projects::class)->find($id);
+
+        // Проверяем, существует ли проект с указанным ID
+        if (!$project) {
+            throw $this->createNotFoundException('Проект не найден');
+        }
+
+        // Создаем форму для редактирования проекта
+        $form = $this->createForm(ProjectsFormType::class, $project);
+
+        // Обрабатываем отправку формы
+        $form->handleRequest($request);
+
+        // Проверяем, была ли форма отправлена и прошла ли валидацию
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($project);
+            // Сохраняем изменения в базе данных
+            $entityManager->flush();
+
+            // Перенаправляем пользователя на страницу с проектами или другую страницу по вашему выбору
+            return $this->redirectToRoute('app_projects');
+        }
+
+        // Если форма не прошла валидацию, отображаем ее с ошибками
+        return $this->render('projects/editProject.html.twig', [
+            'form' => $form->createView(),
+            'project' => $project,
+        ]);
     }
 }

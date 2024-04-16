@@ -135,10 +135,10 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#">Категория 1</a></li>
-                <li><a href="#">Категория 2</a></li>
-                <li><a href="#">Категория 3</a></li>
-                <!-- Другие категории -->
+                <li><a href="{{ path('app_main') }}">All Categories</a></li>
+                {% for category in categories %}
+                    <li><a href="{{ path('app_main_category', { 'categoryId': category.id }) }}">{{ category.title }}</a></li>
+                {% endfor %}
             </ul>
         </nav>
         <div class="auth-buttons">
@@ -166,7 +166,7 @@
                                         <img src="{{ project.getProjectInfo().getProjectImg() }}" alt="{{ project.getProjectInfo().getTitle() }}" class="project-image">
                                     {% endif %}
                                     <span class="likes">likes: {{ project.getProjectInfo().getLikes() }}</span> {# Отображение количества лайков #}
-                                    {#<a href="{{ path('project_details', { id: project.id }) }}" class="btn">View Project</a>#}
+                                    <a href="{{ path('view_project', { id: project.id }) }}" class="btn">View Project</a>
                                 </div>
                             {% endfor %}
                         {% endif %}

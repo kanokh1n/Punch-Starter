@@ -109,7 +109,7 @@
                             <p>Текущая сумма: {{ project.getProjectInfo().getCurrentAmount() }}</p>
                             <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
                             <div class="project-actions">
-                               {# <a href="{{ path('edit_project', { id: project.getId() }) }}" class="btn">Изменить проект</a>#}
+                               <a href="{{ path('edit_project', { id: project.getId() }) }}" class="btn">Изменить проект</a>
                                 <form action="{{ path('delete_project', { id: project.getId() }) }}" method="POST">
                                     <button type="submit" class="btn">Удалить проект</button>
                                 </form>

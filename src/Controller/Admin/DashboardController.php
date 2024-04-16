@@ -2,12 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Users;
 use App\Entity\Projects;
 use App\Entity\Comments;
 use App\Entity\Pledges;
-use App\Entity\Roles;
-use App\Entity\Statuses;
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -21,7 +19,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $routeBuilder = $this->container->get(AdminUrlGenerator::class);
-        $url = $routeBuilder->setController(UsersCrudController::class)->generateUrl();
+        $url = $routeBuilder->setController(UserCrudController::class)->generateUrl();
 
         return $this->redirect($url);
 
@@ -46,19 +44,17 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Www');
+            ->setTitle('Admin');
     }
 
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linktoRoute('Back to the website', 'fas fa-home', 'homepage');
-        yield MenuItem::linktoRoute('Users', 'fas fa-user-circle', Users::class);
+        yield MenuItem::linktoRoute('Users', 'fas fa-user-circle', User::class);
         yield MenuItem::linktoRoute('Projects', 'fas fa-briefcase', Projects::class);
         yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comments::class);
         yield MenuItem::linkToCrud('Pledges', 'fas fa-credit-card', Pledges::class);
-        yield MenuItem::linkToCrud('Roles', 'fas fa-users', Roles::class);
-        yield MenuItem::linkToCrud('Statuses', 'fas fa-cubes', Statuses::class);
         // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
     }
 }

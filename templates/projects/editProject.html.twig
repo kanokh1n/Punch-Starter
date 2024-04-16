@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Создать проект{% endblock %}
+{% block title %}Редактировать проект{% endblock %}
 
 {% block body %}
     <style>
@@ -48,24 +48,18 @@
     </style>
 
     <div class="container">
-        <h1>Создать проект</h1>
-        <form action="{{ path('create_project') }}" method="post">
-            <label for="title">Название проекта:</label>
-            <input type="text" id="title" name="title" required>
+        <h1>Редактировать проект</h1>
+        <div style="display: none;">
+            {{ form_row(form.status) }}
+        </div>
+        {{ form_start(form) }}
+        {{ form_row(form.projectInfo.title) }}
+        {{ form_row(form.projectInfo.description) }}
+        {{ form_row(form.projectInfo.current_amount) }}
+        {{ form_row(form.projectInfo.goal_amount) }}
+        {{ form_row(form.projectInfo.project_img) }}
 
-            <label for="description">Описание проекта:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
-
-            <label for="current_amount">Текущая сумма:</label>
-            <input type="number" id="current_amount" name="current_amount" required>
-
-            <label for="goal_amount">Целевая сумма:</label>
-            <input type="number" id="goal_amount" name="goal_amount" required>
-
-            <label for="project_img">Изображение проекта:</label>
-            <input type="text" id="project_img" name="project_img" required>
-
-            <input type="submit" value="Создать">
-        </form>
+        <button type="submit" class="btn btn-success">Сохранить изменения</button>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

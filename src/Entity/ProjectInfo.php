@@ -39,9 +39,8 @@ class ProjectInfo
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $likes = null;
-
 
     public function getId(): ?int
     {
@@ -149,11 +148,10 @@ class ProjectInfo
         return $this->likes;
     }
 
-    public function setLikes(int $likes): static
+    public function setLikes(?int $likes): static
     {
         $this->likes = $likes;
 
         return $this;
     }
-
 }
