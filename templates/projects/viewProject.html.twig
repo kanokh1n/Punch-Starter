@@ -2,8 +2,7 @@
 
 {% block title %}{{ project.getProjectInfo().getTitle() }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
+{% block body %}
     <style>
         /* Общие стили */
         html, body {
@@ -116,9 +115,7 @@
             margin: 5px 0;
         }
     </style>
-{% endblock %}
 
-{% block body %}
     <div class="wrapper">
         <header>
             <div class="logo">
@@ -144,6 +141,29 @@
                 <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
                 <p>Статус проекта: {{ project.getStatus() }}</p>
             </div>
+
+            <div class="container">
+                <h2>Комментарии</h2>
+                <ul>
+                    {% for comment in project.comments %}
+                        <li>{{ comment.getContent() }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Форма для добавления комментария -->
+            {% if app.user %}
+                <div class="container">
+                    <h2>Добавить комментарий</h2>
+                    <form method="post" action="{{ path('view_project', {'id': project.getId()}) }}">
+                        <textarea name="content" cols="30" rows="5"></textarea>
+                        <button type="submit">Отправить</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>Чтобы оставить комментарий, пожалуйста, <a href="{{ path('app_login') }}">войдите</a>.</p>
+            {% endif %}
+
         </main>
 
         <footer>

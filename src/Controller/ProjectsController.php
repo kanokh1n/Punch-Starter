@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Projects;
 use App\Entity\ProjectInfo;
 use App\Entity\User;
 use App\Form\ProjectsFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -94,7 +94,7 @@ class ProjectsController extends AbstractController
     }
 
     #[Route('/projects/view/{id}', name: 'view_project')]
-    public function view(int $id, EntityManagerInterface $entityManager): Response
+    public function view(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
         // Получаем проект для просмотра по его ID
         $project = $entityManager->getRepository(Projects::class)->find($id);
@@ -102,6 +102,23 @@ class ProjectsController extends AbstractController
         // Проверяем, существует ли проект с указанным ID
         if (!$project) {
             throw $this->createNotFoundException('Проект не найден');
+        }
+
+        // Обработка отправки комментария
+        if ($request->isMethod('POST')) {
+            $commentContent = $request->request->get('content');
+
+            $comment = new Comments();
+            $comment->setContent($commentContent);
+            $comment->setUserId($this->getUser());
+            $comment->setProjectsId($project);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            // После сохранения комментария перенаправляем пользователя на эту же страницу
+            return $this->redirectToRoute('view_project', ['id' => $id]);
         }
 
         return $this->render('projects/viewProject.html.twig', [
