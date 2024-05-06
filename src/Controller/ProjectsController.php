@@ -10,6 +10,7 @@ use App\Form\ProjectsFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,11 +46,30 @@ class ProjectsController extends AbstractController
         $projectInfo->setDescription($requestData['description']);
         $projectInfo->setCurrentAmount($requestData['current_amount']);
         $projectInfo->setGoalAmount($requestData['goal_amount']);
-        $projectInfo->setProjectImg($requestData['project_img']);
         $projectInfo->setCreatedAt(new \DateTimeImmutable());
         $projectInfo->setUpdatedAt(new \DateTimeImmutable());
         $project->setStatus('Active');
         $projectInfo->setLikes(0);
+
+        // Обработка загруженного изображения
+        $imageFile = $request->files->get('project_img');
+        if ($imageFile) {
+            // Генерируем уникальное имя для файла
+            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+
+            // Перемещаем файл в директорию для загруженных изображений
+            try {
+                $imageFile->move(
+                    $this->getParameter('image_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                // Обработка ошибки, если не удалось переместить файл
+            }
+
+            // Сохраняем имя файла в базе данных
+            $projectInfo->setProjectImg($newFilename);
+        }
 
         // Связываем проект с его информацией
         $project->setProjectInfo($projectInfo);
@@ -65,6 +85,7 @@ class ProjectsController extends AbstractController
             'projects' => $projects,
         ]);
     }
+
 
 
     #[Route('/projects/create', name: 'make_Project')]

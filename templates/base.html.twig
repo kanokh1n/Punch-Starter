@@ -1,14 +1,56 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}"> <!-- Подключаем внешние стили -->
+    {% block stylesheets %}{% endblock %} <!-- Переопределяемые блоки для внешних стилей -->
+</head>
+<body>
+<header>
+    {% block header %}
+        <div class ="head">
+            <div class="logo">
+                <a href="/main">
+                    <img src="{{ asset('images/logo.png') }}" alt="Лого">
+                </a>
+            </div>
+            <div class="auth-buttons">
+                {% if app.user %}
+                    <a href="{{ path('app_projects') }}" class="btn">Мои проекты</a>
+                    <a href="{{ path('app_profile') }}" class="btnPurp">Профиль</a>
+                    <a href="{{ path('app_logout') }}" class="btnBlack">Выйти</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="btnPurp">Войти</a>
+                    <a href="{{ path('app_register') }}" class="btnBlack">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class = "navBar">
+            <nav>
+                <ul>
+                    <li><a href="{{ path('app_main') }}">All Categories</a></li>
+                    {% for category in categories %}
+                        <li><a href="{{ path('app_main_category', { 'categoryId': category.id }) }}">{{ category.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    {% endblock %}
+</header>
 
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+{% block content %}{% endblock %}
+
+<footer>
+    <div class="contact-info">
+        <p>Email: example@example.com</p>
+        <p>Телефон: +1234567890</p>
+        <!-- Другая контактная информация -->
+    </div>
+</footer>
+
+{% block javascripts %}{% endblock %} <!-- Переопределяемый блок для внешних скриптов -->
+</body>
 </html>
+

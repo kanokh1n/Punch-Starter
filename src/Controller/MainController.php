@@ -7,9 +7,11 @@ use App\Entity\Projects;
 use App\Entity\ProjectsCategories;
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 class MainController extends AbstractController
 {
@@ -21,8 +23,8 @@ class MainController extends AbstractController
         $this->categoriesRepository = $categoriesRepository;
     }
 
-    #[Route('/main', name: 'app_main')]
-    public function main(): Response
+    #[Route('/main/{page?}', name: 'app_main')]
+    public function main(PaginatorInterface $paginator, Request $request, $page = 1): Response
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('p')
@@ -30,13 +32,22 @@ class MainController extends AbstractController
             ->join('p.projectInfo', 'pi') // Присоединяем связанную таблицу ProjectInfo
             ->orderBy('pi.likes', 'DESC'); // Сортируем по полю "likes" из связанной таблицы
 
-        $projects = $qb->getQuery()->getResult();
+        $projectsQuery = $qb->getQuery();
+
+        $page = $request->query->getInt('page', 1);
+
+        $pagination = $paginator->paginate(
+            $projectsQuery,
+            $request->query->getInt('page', $page), // Текущая страница
+            10 // Количество элементов на странице
+        );
 
         return $this->render('main/index.html.twig', [
-            'projects' => $projects,
+            'pagination' => $pagination,
             'categories' => $this->categoriesRepository->findAll()
         ]);
     }
+
 
     #[Route('/main/{categoryId?}', name: 'app_main_category')]
     public function findProjectByCategory(EntityManagerInterface $entityManager, $categoryId = null): Response

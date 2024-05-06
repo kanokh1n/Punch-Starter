@@ -1,0 +1,131 @@
+* {
+    font-family: "Helvetica Neue", sans-serif;
+}
+/* Общие стили */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+header {
+    color: #fff;
+    padding: 15px 0 10px 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    border: none;
+    border-bottom: 2px solid black;
+    margin-left: 60px;
+    margin-right: 60px;
+    margin-bottom: 20px;
+}
+.head {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.logo a {
+    color: black;
+    text-decoration: none;
+    font-size: 24px;
+}
+.logo img {
+    width: 300px;
+    height: auto;
+}
+.navBar {
+    width: 100%;
+    justify-content: left;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
+nav ul li:first-child {
+    margin-right: 60px;
+}
+
+nav ul li a {
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.auth-buttons .btnPurp {
+    color: black;
+    text-decoration: none;
+    background-color: #fff;
+    border: 3px solid #7B00FF;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.auth-buttons .btnBlack {
+    color: #fff;
+    text-decoration: none;
+    background-color: black;
+    border: 3px solid black;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.auth-buttons .btn {
+    color: black;
+    text-decoration: none;
+    border: 3px solid black;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.auth-buttons .btnBlack:hover {
+    color: black;
+    background-color: white;
+    border: 3px solid black;
+}
+
+.auth-buttons .btnPurp:hover {
+    color: white;
+    background-color: #7B00FF;
+}
+
+nav ul li a:hover {
+    color: black;
+    font-size: 18px;
+}
+
+/* Стили для подвала */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 20px;
+}
+
+.contact-info p {
+    margin: 5px 0;
+}
