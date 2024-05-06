@@ -116,6 +116,10 @@ nav ul li a:hover {
     font-size: 18px;
 }
 
+main {
+    padding: 20px 60px 20px 60px;
+}
+
 /* Стили для подвала */
 footer {
     background-color: #333;
