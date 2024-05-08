@@ -2,99 +2,18 @@
 
 {% block title %}Главная страница{% endblock %}
 
-{% block body %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/projects.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+{% block navbar%}
+    <div class = "navBar">
+        <h2>Мои проекты</h2>
+    </div>
+{% endblock %}
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            margin-left: 20px;
-        }
-
-        .logo a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 24px;
-        }
-
-        main {
-            padding: 20px 0;
-        }
-
-        .actions {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .projects {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .project {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .project h2 {
-            margin-top: 0;
-        }
-
-        .project p {
-            margin-bottom: 10px;
-        }
-
-        .project .btn {
-            display: block;
-            background-color: #4CAF50;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .project .btn:hover {
-            background-color: #45a049;
-        }
-
-        .project-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
-
-    <header>
-        <div class="logo">
-            <a href="/main">YourLogo</a>
-        </div>
-    </header>
-
-    <main>
+{% block content %}
         <div class="container">
-            <h1>Мои проекты</h1>
             <div class="actions">
                 {% if app.user %}
                     <a href="{{ path('create_project') }}" class="btn">Создать проект</a>
@@ -121,5 +40,4 @@
                 {% endif %}
             </div>
         </div>
-    </main>
 {% endblock %}

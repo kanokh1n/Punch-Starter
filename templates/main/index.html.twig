@@ -18,6 +18,9 @@
                 <div class="project-details">
                     <h2>{{ project.getProjectInfo().getTitle() }}</h2>
                     <p>{{ project.getProjectInfo().getDescription() }}</p>
+                </div>
+                <div class="project-details1">
+                    <a href="{{ path('view_project', {'id': project.id}) }}" class="btn">View Project</a>
                     <span class="likes">likes: {{ project.getProjectInfo().getLikes() }}</span>
                 </div>
             </div>

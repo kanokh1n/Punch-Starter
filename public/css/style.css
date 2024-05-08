@@ -2,7 +2,7 @@
     font-family: "Helvetica Neue", sans-serif;
 }
 /* Общие стили */
-html, body {
+html, body, footer {
     height: 100%;
     margin: 0;
     padding: 0;
@@ -43,6 +43,55 @@ header {
     justify-content: left;
 }
 
+
+
+.btnPurp {
+    color: black;
+    text-decoration: none;
+    background-color: #fff;
+    border: 3px solid #7B00FF;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.btnBlack {
+    color: #fff;
+    text-decoration: none;
+    background-color: black;
+    border: 3px solid black;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.btn {
+    color: black;
+    text-decoration: none;
+    border: 3px solid black;
+    padding: 10px 40px;
+    border-radius: 83px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    border: 3px solid #F39237;
+}
+
+.btnBlack:hover {
+    color: black;
+    background-color: white;
+    border: 3px solid black;
+}
+
+.btnPurp:hover {
+    color: white;
+    background-color: #7B00FF;
+}
+
 nav ul {
     list-style-type: none;
     margin: 0;
@@ -53,6 +102,7 @@ nav ul {
 
 nav ul li {
     margin-right: 20px;
+    transition: transform 0.3s ease;
 }
 
 nav ul li:last-child {
@@ -68,68 +118,50 @@ nav ul li a {
     font-size: 18px;
 }
 
-.auth-buttons .btnPurp {
-    color: black;
-    text-decoration: none;
-    background-color: #fff;
-    border: 3px solid #7B00FF;
-    padding: 10px 40px;
-    border-radius: 83px;
-    margin-left: 20px;
-    cursor: pointer;
+nav ul li:hover {
+    transform: translateY(-3px);
 }
 
-.auth-buttons .btnBlack {
-    color: #fff;
-    text-decoration: none;
-    background-color: black;
-    border: 3px solid black;
-    padding: 10px 40px;
-    border-radius: 83px;
-    margin-left: 20px;
-    cursor: pointer;
-}
-
-.auth-buttons .btn {
-    color: black;
-    text-decoration: none;
-    border: 3px solid black;
-    padding: 10px 40px;
-    border-radius: 83px;
-    margin-left: 20px;
-    cursor: pointer;
-}
-
-.auth-buttons .btnBlack:hover {
-    color: black;
-    background-color: white;
-    border: 3px solid black;
-}
-
-.auth-buttons .btnPurp:hover {
-    color: white;
-    background-color: #7B00FF;
-}
-
-nav ul li a:hover {
-    color: black;
-    font-size: 18px;
-}
 
 main {
     padding: 20px 60px 20px 60px;
 }
 
-/* Стили для подвала */
 footer {
-    background-color: #333;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-    flex-shrink: 0;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    background-color: #7B00FF;
+    height: 100px;
+}
+
+.social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 60px;
+}
+
+.social a img  {
+    width: 30px;
+    height: auto;
+}
+.social a:nth-child(n+2){
+    margin-left: 30px;
+}
+
+.contact-info {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 70px;
+    border-left: 2px solid white;
+
 }
 
 .contact-info p {
-    margin: 5px 0;
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-left: 70px;
+    color: white;
 }

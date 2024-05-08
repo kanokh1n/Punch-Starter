@@ -27,6 +27,8 @@
                 {% endif %}
             </div>
         </div>
+    {% endblock %}
+    {% block navbar %}
         <div class = "navBar">
             <nav>
                 <ul>
@@ -45,10 +47,20 @@
 </main>
 
 <footer>
+    <div class="social">
+        <a href="/main">
+            <img src="{{ asset('images/tg.png') }}" alt="Telegram">
+        </a>
+        <a href="/main">
+            <img src="{{ asset('images/vk.png') }}" alt="Вконтакте">
+        </a>
+        <a href="/main">
+            <img src="{{ asset('images/wa.png') }}" alt="Whatsapp">
+        </a>
+    </div>
     <div class="contact-info">
-        <p>Email: example@example.com</p>
-        <p>Телефон: +1234567890</p>
-        <!-- Другая контактная информация -->
+        <p>Email: PunchStarter@gmail.com</p>
+        <p>Телефон: +79993949303</p>
     </div>
 </footer>
 

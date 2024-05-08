@@ -2,53 +2,18 @@
 
 {% block title %}Создать проект{% endblock %}
 
-{% block body %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/createProjects.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+{% endblock %}
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block navbar%}
+    <div class = "navBar">
+        <h2>Создать проект</h2>
+    </div>
+{% endblock %}
 
-        form {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
-
+{% block content %}
     <div class="container">
-        <h1>Создать проект</h1>
         <form action="{{ path('create_project') }}" method="post" enctype="multipart/form-data">
             <label for="title">Название проекта:</label>
             <input type="text" id="title" name="title" required>
