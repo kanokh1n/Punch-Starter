@@ -2,23 +2,35 @@
 
 {% block title %}Register{% endblock %}
 
-{% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+{% endblock %}
 
-    <h1>Register</h1>
+{% block navbar %}
+    <div class="navBar">
+        <h2>Регистрация</h2>
+    </div>
+{% endblock %}
 
-    {{ form_errors(registrationForm) }}
+{% block content %}
+    <main>
+        <form>
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
 
-    {{ form_start(registrationForm) }}
-    {{ form_row(registrationForm.email) }}
-    {{ form_row(registrationForm.plainPassword, {
-        label: 'Password'
-    }) }}
-    {{ form_row(registrationForm.fio) }}
-    {{ form_row(registrationForm.agreeTerms) }}
-
-    <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            {{ form_start(registrationForm) }}
+            {{ form_widget(registrationForm.email, {
+                'attr': {'placeholder': 'Введите почту', 'class': 'full-width'}
+            }) }}
+            {{ form_widget(registrationForm.plainPassword, {
+                'attr': {'placeholder': 'Введите пароль', 'class': 'full-width'}
+            }) }}
+            {{ form_widget(registrationForm.fio, {
+                'attr': {'placeholder': 'Введите ФИО', 'class': 'full-width'}
+            }) }}
+            <button class="btnPurp btn-lg btn-primary" type="submit">Регистрация</button>
+            {{ form_end(registrationForm) }}
+        </form>
+    </main>
 {% endblock %}

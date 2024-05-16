@@ -6,31 +6,63 @@
     <link rel="stylesheet" href="{{ asset('css/createProjects.css') }}"> <!-- Подключаем специфичные стили для страницы -->
 {% endblock %}
 
-{% block navbar%}
-    <div class = "navBar">
+{% block navbar %}
+    <div class="navBar">
         <h2>Создать проект</h2>
     </div>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <main>
         <form action="{{ path('create_project') }}" method="post" enctype="multipart/form-data">
-            <label for="title">Название проекта:</label>
-            <input type="text" id="title" name="title" required>
+            <div class="form-header">
+                <div class="form-image">
+                    <label for="project_img">Изображение проекта:</label>
+                    <input type="file" id="project_img" name="project_img" accept="image/*" required onchange="previewImage(event)">
+                    <img id="image_preview" src="#" alt="Предварительный просмотр" style="display: none; margin-top: 10px; max-width: 100%;">
+                </div>
+                <div class="form-details">
+                    <div class="form-group">
+                        <label for="title">Название проекта:</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Описание проекта:</label>
+                        <textarea id="description" name="description" rows="4" required></textarea>
+                    </div>
+                </div>
+            </div>
 
-            <label for="description">Описание проекта:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+            <div class="form-group">
+                <label for="current_amount">Текущая сумма:</label>
+                <input type="number" id="current_amount" name="current_amount" required>
+            </div>
 
-            <label for="current_amount">Текущая сумма:</label>
-            <input type="number" id="current_amount" name="current_amount" required>
+            <div class="form-group">
+                <label for="goal_amount">Целевая сумма:</label>
+                <input type="number" id="goal_amount" name="goal_amount" required>
+            </div>
 
-            <label for="goal_amount">Целевая сумма:</label>
-            <input type="number" id="goal_amount" name="goal_amount" required>
-
-            <label for="project_img">Изображение проекта:</label>
-            <input type="file" id="project_img" name="project_img" accept="image/*" required>
-
-            <input type="submit" value="Создать">
+            <button type="submit" class="btnPurp">Создать</button>
         </form>
-    </div>
+    </main>
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('image_preview');
+                preview.src = reader.result;
+                preview.style.display = 'block';
+
+                input.style.display = 'none';
+                input.previousElementSibling.style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
 {% endblock %}
+
+
+
+
