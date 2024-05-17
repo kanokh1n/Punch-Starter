@@ -5,7 +5,18 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/main.css') }}"> <!-- Подключаем специфичные стили для страницы -->
 {% endblock %}
-
+{% block navbar %}
+    <div class = "navBar">
+        <nav>
+            <ul>
+                <li><a href="{{ path('app_main') }}">All Categories</a></li>
+                {% for category in categories %}
+                    <li><a href="{{ path('app_main_category', { 'categoryId': category.id }) }}">{{ category.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
 {% block content %}
     <div class="projects">
         {% for project in pagination %}

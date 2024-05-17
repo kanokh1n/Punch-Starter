@@ -1,3 +1,9 @@
+
+.navBar {
+    width: 100%;
+    justify-content: left;
+}
+
 .projects {
     margin-left: 60px;
     margin-right: 60px;
@@ -10,7 +16,7 @@
 .project {
     padding: 20px;
     max-height: 700px;
-    width: 400px;
+    width: 410px;
     background-color: #f9f9f9;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

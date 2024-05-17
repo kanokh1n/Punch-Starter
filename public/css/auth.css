@@ -1,3 +1,8 @@
+.navBar {
+    width: 100%;
+    justify-content: left;
+}
+
 .navBar h2{
     color: black;
     margin: 0;

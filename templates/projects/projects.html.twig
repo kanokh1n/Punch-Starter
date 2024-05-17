@@ -1,45 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Главная страница{% endblock %}
+{% block title %}Мои проекты{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/projects.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+    <link rel="stylesheet" href="{{ asset('css/projects.css') }}">
 {% endblock %}
 
-{% block navbar%}
-    <div class = "navBar">
-        <h2>Мои проекты</h2>
+{% block navbar %}
+    <div class="navBar">
+        <div>
+            <h2>Мои проекты</h2>
+        </div>
+        <div class="actions">
+            {% if app.user %}
+                <a href="{{ path('create_project') }}" class="btn">Создать проект</a>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 
 {% block content %}
-    <main>
-        <div class="container">
-            <div class="actions">
-                {% if app.user %}
-                    <a href="{{ path('create_project') }}" class="btn">Создать проект</a>
-                {% endif %}
-            </div>
-            <div class="projects">
-                {% if projects is not empty %}
-                    {% for project in projects %}
-                        <div class="project">
-                            <h2>{{ project.getProjectInfo().getTitle() }}</h2>
-                            <p>{{ project.getProjectInfo().getDescription() }}</p>
-                            <p>Текущая сумма: {{ project.getProjectInfo().getCurrentAmount() }}</p>
-                            <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
-                            <div class="project-actions">
-                               <a href="{{ path('edit_project', { id: project.getId() }) }}" class="btn">Изменить проект</a>
-                                <form action="{{ path('delete_project', { id: project.getId() }) }}" method="POST">
-                                    <button type="submit" class="btn">Удалить проект</button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p>У вас пока нет проектов.</p>
-                {% endif %}
-            </div>
-        </div>
-    </main>
+    <div class="projects">
+        {% if projects is not empty %}
+            {% for project in projects %}
+                <div class="project">
+                    <div class="project-image">
+                        {% if project.getProjectInfo().getProjectImg() %}
+                            <img src="{{ asset('uploads/' ~ project.getProjectInfo().getProjectImg()) }}" alt="{{ project.getProjectInfo().getTitle() }}">
+                        {% endif %}
+                    </div>
+                    <div class="project-details">
+                        <h2>{{ project.getProjectInfo().getTitle() }}</h2>
+                        <p>{{ project.getProjectInfo().getDescription() }}</p>
+                    </div>
+                    <div class="project-actions">
+                        <a href="{{ path('edit_project', { id: project.getId() }) }}" class="btnPurp">Изменить проект</a>
+                        <form action="{{ path('delete_project', { id: project.getId() }) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btnBlack">Удалить проект</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>У вас пока нет проектов.</p>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -2,7 +2,10 @@
 
 {% block title %}Профиль пользователя{% endblock %}
 
-{% block body %}
+{% block navbar%}
+{% endblock %}
+
+{% block content %}
     <div class="profile-info">
         <h2>Профиль пользователя</h2>
         <p><strong>ФИО:</strong> {{ app.user.getFio() }}</p>
