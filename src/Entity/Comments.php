@@ -21,7 +21,7 @@ class Comments
     #[ORM\JoinColumn(nullable: false)]
     private ?Projects $projects_id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 1500)]
     private ?string $content = null;
 
     #[ORM\Column]

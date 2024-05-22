@@ -1,13 +1,5 @@
-body {
-    margin: 0;
-    padding: 0;
-}
-
 main {
     padding: 20px 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 70vh;
 }
 
@@ -24,12 +16,6 @@ main {
 
 form {
     display: flex;
-    flex-direction: column;
-}
-
-.form-header {
-    display: flex;
-    margin-bottom: 20px;
 }
 
 .form-image, .form-details {
@@ -39,8 +25,6 @@ form {
 }
 
 .form-image {
-    justify-content: center;
-    align-items: center;
     margin-right: 20px;
 }
 
@@ -72,7 +56,7 @@ input[type="number"]{
 
 input[type="file"] {
     padding: 3px;
-    height: 290px;
+    height: 305px;
     border: 2px solid black;
     border-radius: 5px;
 }

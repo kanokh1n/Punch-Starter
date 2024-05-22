@@ -2,64 +2,69 @@
 
 {% block title %}Редактировать проект{% endblock %}
 
-{% block body %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/createProjects.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+{% endblock %}
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        form {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
-
-    <div class="container">
-        <h1>Редактировать проект</h1>
-        <div style="display: none;">
-            {{ form_row(form.status) }}
-        </div>
-        {{ form_start(form) }}
-        {{ form_row(form.projectInfo.title) }}
-        {{ form_row(form.projectInfo.description) }}
-        {{ form_row(form.projectInfo.current_amount) }}
-        {{ form_row(form.projectInfo.goal_amount) }}
-        {{ form_row(form.projectInfo.project_img) }}
-
-        <button type="submit" class="btn btn-success">Сохранить изменения</button>
-        {{ form_end(form) }}
+{% block navbar %}
+    <div class="navBar">
+        <h2>Редактировать проект</h2>
     </div>
 {% endblock %}
+
+{% block content %}
+    <main>
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <div class="form-header">
+            <div class="form-image">
+                <label for="project_img">Изображение проекта:</label>
+                {{ form_widget(form.projectInfo.project_img, {'attr': {'id': 'project_img', 'accept': 'image/*', 'onchange': 'previewImage(event)'}}) }}
+                <img id="image_preview" src="#" alt="Предварительный просмотр" />
+            </div>
+            <div class="form-details">
+                <div class="form-group">
+                    <label for="title">Название проекта:</label>
+                    {{ form_widget(form.projectInfo.title, {'attr': {'id': 'title'}}) }}
+                </div>
+                <div class="form-group">
+                    <label for="description">Описание проекта:</label>
+                    {{ form_widget(form.projectInfo.description, {'attr': {'id': 'description', 'class': 'desc', 'rows': '10'}}) }}
+                </div>
+                <div class="form-group">
+                    <label for="current_amount">Текущая сумма:</label>
+                    {{ form_widget(form.projectInfo.current_amount, {'attr': {'id': 'current_amount'}}) }}
+                </div>
+                <div class="form-group">
+                    <label for="goal_amount">Целевая сумма:</label>
+                    {{ form_widget(form.projectInfo.goal_amount, {'attr': {'id': 'goal_amount'}}) }}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btnPurp">Сохранить изменения</button>
+        {{ form_end(form) }}
+    </main>
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('image_preview');
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        // Load existing image preview if it exists
+        document.addEventListener("DOMContentLoaded", function() {
+            const existingImage = document.querySelector('#project_img');
+            if (existingImage && existingImage.dataset.previewUrl) {
+                const preview = document.getElementById('image_preview');
+                preview.src = existingImage.dataset.previewUrl;
+                preview.style.display = 'block';
+            }
+        });
+    </script>
+{% endblock %}
+
+

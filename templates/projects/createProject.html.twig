@@ -15,7 +15,6 @@
 {% block content %}
     <main>
         <form action="{{ path('create_project') }}" method="post" enctype="multipart/form-data">
-            <div class="form-header">
                 <div class="form-image">
                     <label for="project_img">Изображение проекта:</label>
                     <input type="file" id="project_img" name="project_img" accept="image/*" required onchange="previewImage(event)">
@@ -40,7 +39,6 @@
                         <input type="number" id="goal_amount" name="goal_amount" required>
                     </div>
                 </div>
-            </div>
             <button type="submit" class="btnPurp">Создать</button>
         </form>
     </main>

@@ -1,7 +1,6 @@
 
 services:
     php:
-
         container_name: php
         build:
             context: ./..

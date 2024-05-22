@@ -2,75 +2,46 @@
 
 {% block title %}{{ project.getProjectInfo().getTitle() }}{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/viewProject.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+{% endblock %}
+
 {% block navbar %}
 {% endblock %}
 
 {% block content %}
-    <style>
-        /* Общие стили */
-        html, body {
-            font-family: Arial, sans-serif;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .wrapper {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content {
-            flex: 1;
-        }
-
-        /* Стили для основного контента */
-        main {
-            padding: 20px 0;
-        }
-
-        .project h2 {
-            margin-top: 0;
-        }
-
-        .project p {
-            margin-bottom: 0;
-        }
-
-        .project .btn {
-            display: block;
-            margin-top: 10px;
-            background-color: #4CAF50;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .project .btn:hover {
-            background-color: #45a049;
-        }
-    </style>
-
     <div class="wrapper">
-        <main class="content">
-            <div class="container">
+        <div class="container">
+
+            <div class="container-left">
                 <h1>{{ project.getProjectInfo().getTitle() }}</h1>
                 <p>{{ project.getProjectInfo().getDescription() }}</p>
-                <p>Текущая сумма: {{ project.getProjectInfo().getCurrentAmount() }}</p>
-                <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
-                <p>Статус проекта: {{ project.getStatus() }}</p>
             </div>
 
-            <div class="container">
+            <div class="container-right">
+                <div class="project-image">
+                    {% if project.getProjectInfo().getProjectImg() %}
+                        <img src="{{ asset('uploads/' ~ project.getProjectInfo().getProjectImg()) }}" alt="{{ project.getProjectInfo().getTitle() }}">
+                    {% endif %}
+                </div>
+                <div class="details">
+                    <p>Текущая сумма: {{ project.getProjectInfo().getCurrentAmount() }}</p>
+                    <p>Целевая сумма: {{ project.getProjectInfo().getGoalAmount() }}</p>
+                    <p>Лайки: {{ project.getProjectInfo().getLikes() }}</p>
+                </div>
+            </div>
+
+            <div class="contactR">
+                <a href="#" class="btnPurp">Пожертвовать</a>
+                <a href="#" class="btnPurp">GitHub</a>
+                <a href="#" class="btnPurp">Telegram</a>
+                <a href="#" class="btnPurp">VKontakte</a>
+            </div>
+
+        </div>
+
+        <div class="containerCom">
+            <div>
                 <h2>Комментарии</h2>
                 <ul>
                     {% for comment in project.comments %}
@@ -78,20 +49,17 @@
                     {% endfor %}
                 </ul>
             </div>
-
-            <!-- Форма для добавления комментария -->
-            {% if app.user %}
-                <div class="container">
-                    <h2>Добавить комментарий</h2>
+            <div>
+                {% if app.user %}
                     <form method="post" action="{{ path('view_project', {'id': project.getId()}) }}">
-                        <textarea name="content" cols="30" rows="5"></textarea>
-                        <button type="submit">Отправить</button>
+                        <textarea name="content" cols="30" rows="5" placeholder="Оставить комментарий..."></textarea>
+                        <button type="submit" class="btnPurp">Отправить</button>
                     </form>
-                </div>
-            {% else %}
-                <p>Чтобы оставить комментарий, пожалуйста, <a href="{{ path('app_login') }}">войдите</a>.</p>
-            {% endif %}
-
-        </main>
+                {% else %}
+                    <p>Чтобы оставить комментарий, пожалуйста, <a href="{{ path('app_login') }}">войдите</a>.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}
+
