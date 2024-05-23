@@ -18,95 +18,68 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProjectsController extends AbstractController
 {
-    #[Route('/projects/create', name: 'create_project', methods: ['POST'])]
+    #[Route('/projects/create', name: 'create_project', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Получаем текущего аутентифицированного пользователя
-        /** @var User $user */
         $user = $this->getUser();
 
-        // Проверяем, аутентифицирован ли пользователь
         if (!$user) {
-            // Возвращаем ошибку 401 Unauthorized, если пользователь не аутентифицирован
             return new Response('You must be logged in to create a project', Response::HTTP_UNAUTHORIZED);
         }
 
-        // Получаем данные о проекте из запроса
-        $requestData = $request->request->all();
-
-        // Создаем новый проект
         $project = new Projects();
+        $form = $this->createForm(ProjectsFormType::class, $project);
+        $form->handleRequest($request);
 
-        // Устанавливаем пользователя владельца проекта
-        $project->setUserId($user);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $project->setUserId($user);
+            $project->setStatus('Active');
+            $projectInfo = $project->getProjectInfo();
+            $projectInfo->setCreatedAt(new \DateTimeImmutable());
+            $projectInfo->setUpdatedAt(new \DateTimeImmutable());
+            $projectInfo->setLikes(0);
 
-        // Создаем информацию о проекте
-        $projectInfo = new ProjectInfo();
-        $projectInfo->setTitle($requestData['title']);
-        $projectInfo->setDescription($requestData['description']);
-        $projectInfo->setCurrentAmount($requestData['current_amount']);
-        $projectInfo->setGoalAmount($requestData['goal_amount']);
-        $projectInfo->setCreatedAt(new \DateTimeImmutable());
-        $projectInfo->setUpdatedAt(new \DateTimeImmutable());
-        $project->setStatus('Active');
-        $projectInfo->setLikes(0);
+            $imageFile = $form['projectInfo']['project_img']->getData();
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
 
-        // Обработка загруженного изображения
-        $imageFile = $request->files->get('project_img');
-        if ($imageFile) {
-            // Генерируем уникальное имя для файла
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageDirectory = rtrim($this->getParameter('image_directory'), '/') . '/';
 
-            // Перемещаем файл в директорию для загруженных изображений
-            try {
-                $imageFile->move(
-                    $this->getParameter('image_directory'),
-                    $newFilename
-                );
-            } catch (FileException $e) {
-                // Обработка ошибки, если не удалось переместить файл
+                try {
+                    $imageFile->move(
+                        $imageDirectory,
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Обработка ошибки, если не удалось переместить файл
+                }
+
+                $projectInfo->setProjectImg($newFilename);
             }
 
-            // Сохраняем имя файла в базе данных
-            $projectInfo->setProjectImg($newFilename);
+
+            $entityManager->persist($project);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_projects');
         }
 
-        // Связываем проект с его информацией
-        $project->setProjectInfo($projectInfo);
-
-        // Сохраняем проект в базе данных
-        $entityManager->persist($project);
-        $entityManager->flush();
-
-        // Получаем проекты текущего пользователя
-        $projects = $user->getProjects();
-
-        return $this->render('projects/projects.html.twig', [
-            'projects' => $projects,
-        ]);
-    }
-
-
-
-    #[Route('/projects/create', name: 'make_Project')]
-    public function createProject(): Response
-    {
         return $this->render('projects/createProject.html.twig', [
-            'controller_name' => 'ProjectsController',
+            'form' => $form->createView(),
+            'is_edit' => false,
+            'project_image_url' => '',
         ]);
     }
 
     #[Route('/projects', name: 'app_projects')]
     public function index(Security $security, UrlGeneratorInterface $urlGenerator): Response
     {
-        // Получаем текущего залогиненного пользователя
         $user = $security->getUser();
 
         if ($user === null) {
             return $this->redirectToRoute('app_main');
         }
 
-        // Получаем проекты текущего пользователя
         $projects = $user->getProjects();
 
         return $this->render('projects/projects.html.twig', [
@@ -117,15 +90,12 @@ class ProjectsController extends AbstractController
     #[Route('/projects/view/{id}', name: 'view_project')]
     public function view(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
-        // Получаем проект для просмотра по его ID
         $project = $entityManager->getRepository(Projects::class)->find($id);
 
-        // Проверяем, существует ли проект с указанным ID
         if (!$project) {
             throw $this->createNotFoundException('Проект не найден');
         }
 
-        // Обработка отправки комментария
         if ($request->isMethod('POST')) {
             $commentContent = $request->request->get('content');
 
@@ -138,7 +108,6 @@ class ProjectsController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            // После сохранения комментария перенаправляем пользователя на эту же страницу
             return $this->redirectToRoute('view_project', ['id' => $id]);
         }
 
@@ -150,53 +119,64 @@ class ProjectsController extends AbstractController
     #[Route('/projects/{id}/delete', name: 'delete_project', methods: ['POST'])]
     public function delete(int $id, EntityManagerInterface $entityManager): Response
     {
-        // Получаем проект для удаления по его ID
         $project = $entityManager->getRepository(Projects::class)->find($id);
 
-        // Проверяем, существует ли проект с указанным ID
         if (!$project) {
             throw $this->createNotFoundException('Проект не найден');
         }
 
-        // Удаляем проект из базы данных
         $entityManager->remove($project);
         $entityManager->flush();
 
-        // Перенаправляем пользователя на страницу с проектами
         return $this->redirectToRoute('app_projects');
     }
 
-    #[Route('/projects/edit/{id}', name: 'edit_project')]
+    #[Route('/projects/edit/{id}', name: 'edit_project', methods: ['GET', 'POST'])]
     public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Получаем проект для редактирования по его ID
         $project = $entityManager->getRepository(Projects::class)->find($id);
 
-        // Проверяем, существует ли проект с указанным ID
         if (!$project) {
             throw $this->createNotFoundException('Проект не найден');
         }
 
-        // Создаем форму для редактирования проекта
         $form = $this->createForm(ProjectsFormType::class, $project);
-
-        // Обрабатываем отправку формы
         $form->handleRequest($request);
 
-        // Проверяем, была ли форма отправлена и прошла ли валидацию
         if ($form->isSubmitted() && $form->isValid()) {
+            $project->getProjectInfo()->setUpdatedAt(new \DateTimeImmutable());
+
+            $imageFile = $form['projectInfo']['project_img']->getData();
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                $imageDirectory = rtrim($this->getParameter('image_directory'), '/') . '/';
+
+                try {
+                    $imageFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/' . $imageDirectory,
+                        $newFilename
+                    );
+                    $project->getProjectInfo()->setProjectImg($newFilename);
+                } catch (FileException $e) {
+                    // Обработка ошибки
+                }
+            }
+
             $entityManager->persist($project);
-            // Сохраняем изменения в базе данных
             $entityManager->flush();
 
-            // Перенаправляем пользователя на страницу с проектами или другую страницу по вашему выбору
             return $this->redirectToRoute('app_projects');
         }
 
-        // Если форма не прошла валидацию, отображаем ее с ошибками
-        return $this->render('projects/editProject.html.twig', [
+        $projectImageUrl = $project->getProjectInfo()->getProjectImg()
+            ? '/' . rtrim($this->getParameter('image_directory'), '/') . '/' . $project->getProjectInfo()->getProjectImg()
+            : '';
+
+        return $this->render('projects/createProject.html.twig', [
             'form' => $form->createView(),
-            'project' => $project,
+            'is_edit' => true,
+            'project_image_url' => $projectImageUrl,
         ]);
     }
+
 }

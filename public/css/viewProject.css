@@ -25,7 +25,6 @@
     display: flex;
     flex-direction: column;
     border-left: 2px solid black;
-
 }
 
 .contactR a{
@@ -48,8 +47,6 @@
     margin-right: 20px;
 }
 
-
-
 .container-right .project-image img {
     max-width: 100%;
     max-height: 450px;
@@ -66,19 +63,17 @@
     margin-right: 54px;
 }
 
-textarea {
-    width: 98.5%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 button[type="submit"] {
     align-self: flex-end;
     margin-top: 10px;
+    font-size: 16px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+form textarea{
+    padding: 10px;
 }

@@ -15,9 +15,6 @@ class ProjectsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('status', TextType::class, [
-                'label' => 'Статус проекта',
-            ])
             // Поля из сущности ProjectInfo
             ->add('projectInfo', ProjectInfoFormType::class);
     }

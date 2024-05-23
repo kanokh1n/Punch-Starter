@@ -1,74 +1,128 @@
-main {
-    padding: 20px 60px;
-    height: 70vh;
-}
-
-.navBar h2 {
-    color: black;
-    margin: 0;
-    padding: 0;
-}
-
 .navBar {
     width: 100%;
     justify-content: left;
 }
 
-form {
-    display: flex;
+.navBar h2{
+    color: black;
+    margin: 0;
+    padding: 0;
 }
 
-.form-image, .form-details {
-    flex: 1;
+.wrapper {
+    padding: 20px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.contactR {
+    width: 20%;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid black;
+}
+
+.contactR a {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.container-left {
+    width: 35%;
+    margin-right: 20px;
     display: flex;
     flex-direction: column;
 }
 
-.form-image {
-    margin-right: 20px;
-}
-
-.form-image label {
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.form-details .form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-input[type="text"],
-input[type="number"]{
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid black;
+.container-left textarea {
+    margin-top: 20px;
+    width: 90%;
     padding: 10px;
-}
-.desc{
-    width: 100%;
-    padding: 10px;
-}
-
-input[type="file"] {
-    padding: 3px;
-    height: 305px;
-    border: 2px solid black;
+    border: 2px solid #ccc;
     border-radius: 5px;
 }
 
-.btnPurp {
-    margin-top: 20px;
-    align-self: flex-end;
-    color: black;
-    text-decoration: none;
-    background-color: #fff;
-    border: 3px solid #7B00FF;
-    padding: 10px 40px;
-    border-radius: 83px;
-    cursor: pointer;
+.container-left input{
+    width: 90%;
+    padding: 10px;
+    font-size: 32px;
+    font-weight: bold;
+    border: none;
+    border-bottom: 2px solid black;
 }
+
+.container-right {
+    width: 45%;
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-right .project-image {
+    width: 100%;
+    height: 370px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.container-right .project-image input {
+    position: absolute;
+    width: 100%;
+    max-height: 370px;
+    opacity: 0;
+    cursor: pointer;
+    border: 2px solid white;
+    border-radius: 5px;
+}
+
+.container-right .project-image img {
+    width: 100%;
+    height: 370px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.details input {
+    width: 150px;
+    margin-right: 10px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+button[type="submit"] {
+    align-self: flex-end;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+
+
+
+
