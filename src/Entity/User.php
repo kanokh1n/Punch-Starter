@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UsersMessages::class, mappedBy: 'user_sender', orphanRemoval: true)]
     private Collection $sendedUsersMessages;
 
+    #[ORM\ManyToMany(targetEntity: Likes::class, mappedBy: 'user_id')]
+    private Collection $likes;
+
 
 
     public function __construct()
@@ -78,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->comments = new ArrayCollection();
         $this->usersRoles = new ArrayCollection();
         $this->sendedUsersMessages = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -372,6 +376,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($sendedUsersMessage->getUserSender() === $this) {
                 $sendedUsersMessage->setUserSender(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Likes>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Likes $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->addUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Likes $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            $like->removeUserId($this);
         }
 
         return $this;

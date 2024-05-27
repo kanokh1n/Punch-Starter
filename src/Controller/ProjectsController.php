@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comments;
+use App\Entity\Likes;
 use App\Entity\Projects;
 use App\Entity\ProjectInfo;
 use App\Entity\User;
@@ -125,11 +126,18 @@ class ProjectsController extends AbstractController
             throw $this->createNotFoundException('Проект не найден');
         }
 
+        // Удаляем все связанные записи Likes
+        $likes = $entityManager->getRepository(Likes::class)->findBy(['project' => $project]);
+        foreach ($likes as $like) {
+            $entityManager->remove($like);
+        }
+
         $entityManager->remove($project);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_projects');
     }
+
 
     #[Route('/projects/edit/{id}', name: 'edit_project', methods: ['GET', 'POST'])]
     public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response

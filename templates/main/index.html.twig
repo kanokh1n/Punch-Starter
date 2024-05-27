@@ -3,10 +3,11 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}"> <!-- Подключаем специфичные стили для страницы -->
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
 {% endblock %}
+
 {% block navbar %}
-    <div class = "navBar">
+    <div class="navBar">
         <nav>
             <ul>
                 <li><a href="{{ path('app_main') }}">All Categories</a></li>
@@ -17,6 +18,7 @@
         </nav>
     </div>
 {% endblock %}
+
 {% block content %}
     <div class="projects">
         {% for project in pagination %}
@@ -31,29 +33,70 @@
                     <p>{{ project.getProjectInfo().getDescription() }}</p>
                 </div>
                 <div class="project-details1">
-                    <a href="{{ path('view_project', {'id': project.id}) }}" class="btn">View Project</a>
-                    <span class="likes">likes: {{ project.getProjectInfo().getLikes() }}</span>
+                    <a href="{{ path('view_project', {'id': project.id}) }}" class="btn">Подробней</a>
+                    <span class="likes">{{ project.getLikes().count }}</span>
+                    <button class="like-button {% if project.isLikedByUser %}liked{% else %}unliked{% endif %}" data-project-id="{{ project.id }}">
+                        {% if project.isLikedByUser %}
+                            <img src="{{ asset('images/liked.png') }}" alt="Liked">
+                        {% else %}
+                            <img src="{{ asset('images/unliked.png') }}" alt="Unliked">
+                        {% endif %}
+                    </button>
                 </div>
             </div>
         {% endfor %}
     </div>
-    {% if pagination.currentPageNumber > 1 or pagination.currentPageNumber < pagination.totalItemCount / pagination.getItemNumberPerPage() %}
-        <div class="pagination">
-            {% if pagination.currentPageNumber > 1 %}
-                <a href="{{ path('app_main', { page: pagination.currentPageNumber - 1 }) }}">Previous</a>
-            {% endif %}
-            {% for page in 1..pagination.pageCount %}
-                {% if pagination.currentPageNumber == page %}
-                    {{ page }}
-                {% else %}
-                    <a href="{{ path('app_main', { page: page }) }}">{{ page }}</a>
-                {% endif %}
-            {% endfor %}
-            {% if pagination.currentPageNumber < pagination.pageCount %}
-                <a href="{{ path('app_main', { page: pagination.currentPageNumber + 1 }) }}">Next</a>
-            {% endif %}
-        </div>
-    {% endif %}
+
+    <div class="pagination">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    <script>
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const projectId = button.getAttribute('data-project-id');
+                const imgElement = button.querySelector('img');
+                const isLiked = button.classList.contains('liked');
+                const action = isLiked ? 'unlike' : 'like';
+                const url = `/project/${projectId}/${action}`;
+                const method = isLiked ? 'DELETE' : 'POST';
+
+                console.log(`Sending ${method} request to ${url} for project ${projectId}`);
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token('') }}'
+                    },
+                    body: JSON.stringify({ _token: '{{ csrf_token('') }}' })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => { throw new Error(data.error || 'Unknown error'); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(`Success: ${data.message}`);
+
+                        button.classList.toggle('liked');
+                        button.classList.toggle('unliked');
+
+                        const newSrc = isLiked ? '{{ asset('images/unliked.png') }}' : '{{ asset('images/liked.png') }}';
+                        imgElement.setAttribute('src', newSrc);
+
+                        const likesSpan = button.closest('.project').querySelector('.likes');
+                        likesSpan.textContent = data.likesCount;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(error.message);
+                    });
+            });
+        });
+
+    </script>
 {% endblock %}
 
 

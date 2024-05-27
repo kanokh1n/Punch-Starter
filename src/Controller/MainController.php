@@ -4,77 +4,107 @@ namespace App\Controller;
 
 use App\Entity\Categories;
 use App\Entity\Projects;
-use App\Entity\ProjectsCategories;
 use App\Repository\CategoriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class MainController extends AbstractController
 {
     private $entityManager;
+    private $categoriesRepository;
+    private $security;
 
-    public function __construct(EntityManagerInterface $entityManager, CategoriesRepository $categoriesRepository)
+    public function __construct(EntityManagerInterface $entityManager, CategoriesRepository $categoriesRepository, Security $security)
     {
         $this->entityManager = $entityManager;
         $this->categoriesRepository = $categoriesRepository;
+        $this->security = $security;
     }
 
-    #[Route('/main/{page?}', name: 'app_main')]
-    public function main(PaginatorInterface $paginator, Request $request, $page = 1): Response
+    #[Route('/main/{page<\d+>?1}', name: 'app_main')]
+    public function main(PaginatorInterface $paginator, Request $request, int $page = 1): Response
     {
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('p')
+        $qb->select('p', 'COUNT(l.id) AS HIDDEN likesCount')
             ->from(Projects::class, 'p')
-            ->join('p.projectInfo', 'pi') // Присоединяем связанную таблицу ProjectInfo
-            ->orderBy('pi.likes', 'DESC'); // Сортируем по полю "likes" из связанной таблицы
+            ->leftJoin('p.likes', 'l')
+            ->groupBy('p.id')
+            ->orderBy('likesCount', 'DESC');
 
         $projectsQuery = $qb->getQuery();
 
-        $page = $request->query->getInt('page', 1);
-
         $pagination = $paginator->paginate(
             $projectsQuery,
-            $request->query->getInt('page', $page), // Текущая страница
+            $page, // Текущая страница
             10 // Количество элементов на странице
         );
 
+        $user = $this->security->getUser();
+        $projects = $pagination->getItems();
+
+        // Определение, поставил ли пользователь лайк каждому проекту
+        foreach ($projects as $project) {
+            $project->isLikedByUser = $project->getLikes()->exists(function($key, $like) use ($user) {
+                return $like->getUser() === $user;
+            });
+        }
+
         return $this->render('main/index.html.twig', [
             'pagination' => $pagination,
-            'categories' => $this->categoriesRepository->findAll()
+            'categories' => $this->categoriesRepository->findAll(),
+            'user' => $user
         ]);
     }
 
-
-    #[Route('/main/{categoryId?}', name: 'app_main_category')]
-    public function findProjectByCategory(EntityManagerInterface $entityManager, $categoryId = null): Response
+    #[Route('/main/category/{categoryId}', name: 'app_main_category')]
+    public function findProjectByCategory(Request $request, PaginatorInterface $paginator, int $categoryId): Response
     {
-        // Получаем репозиторий сущности Categories
-        $categoriesRepository = $entityManager->getRepository(Categories::class);
+        $category = $this->categoriesRepository->find($categoryId);
 
-        // Находим категорию по её ID
-        $category = $categoriesRepository->find($categoryId);
-
-        // Проверяем, существует ли категория с заданным ID
         if (!$category) {
             throw $this->createNotFoundException('Категория не найдена');
         }
 
-        // Получаем все проекты, связанные с выбранной категорией
-        $projects = $category->getProjectsCategories()->map(function ($projectCategory) {
-            return $projectCategory->getProjectId();
-        });
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('p', 'COUNT(l.id) AS HIDDEN likesCount')
+            ->from(Projects::class, 'p')
+            ->leftJoin('p.projectsCategories', 'pc')
+            ->leftJoin('p.likes', 'l')
+            ->where('pc.category = :category')
+            ->setParameter('category', $category)
+            ->groupBy('p.id')
+            ->orderBy('likesCount', 'DESC');
 
-        // Преобразуем коллекцию проектов в массив
-        $projects = $projects->toArray();
+        $projectsQuery = $qb->getQuery();
+
+        $pagination = $paginator->paginate(
+            $projectsQuery,
+            $request->query->getInt('page', 1), // Текущая страница
+            10 // Количество элементов на странице
+        );
+
+        $user = $this->security->getUser();
+        $projects = $pagination->getItems();
+
+        // Определение, поставил ли пользователь лайк каждому проекту
+        foreach ($projects as $project) {
+            $project->isLikedByUser = $project->getLikes()->exists(function($key, $like) use ($user) {
+                return $like->getUser() === $user;
+            });
+        }
 
         return $this->render('main/index.html.twig', [
-            'projects' => $projects,
-            'categories' => $this->categoriesRepository->findAll(), // Добавляем список категорий
+            'pagination' => $pagination,
+            'categories' => $this->categoriesRepository->findAll(),
+            'user' => $user
         ]);
     }
-
 }
+
+
+

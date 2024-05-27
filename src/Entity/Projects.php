@@ -35,11 +35,15 @@ class Projects
     #[ORM\JoinColumn(nullable: true)]
     private ?string $status = null;
 
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Likes::class)]
+    private Collection $likes;
+
     public function __construct()
     {
         $this->projectsCategories = new ArrayCollection();
         $this->pledges = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -193,5 +197,54 @@ class Projects
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Likes>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Likes $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Likes $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getProject() === $this) {
+                $like->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLikesCount(): int
+    {
+        return $this->likes->count();
+    }
+
+    public function isLikedByUser(?User $user): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) {
+                return true;
+            }
+        }
+        return false;
     }
 }

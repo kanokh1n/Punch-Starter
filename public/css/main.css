@@ -42,6 +42,17 @@
     justify-items: center;
 }
 
+.project-details1 img{
+    height: 40px;
+    width: auto;
+}
+
+.project-details1 button{
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
 .likes {
     align-self: end;
 }

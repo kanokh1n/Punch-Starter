@@ -29,37 +29,35 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $user->setFio($form->get('fio')->getData());
 
-            $user->setFio($form->get('fio')->getData());
+                $user->setDescription(null);
+                $user->setProfileImg(null);
+                $user->setCreatedAt(new \DateTimeImmutable());
 
-            $user->setDescription(null);
-            $user->setProfileImg(null);
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            $user->setCreatedAt(new \DateTimeImmutable());
+                return $this->redirectToRoute('app_main');
+            } else {
+                // Добавьте отладочное сообщение для проверки, какие ошибки есть у формы
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                $this->addFlash('error', 'Форма содержит ошибки: ' . implode(', ', $errors));
+            }
+        } else {
 
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('mailer@your-domain.com', 'Punch_starter'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-
-            // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('app_main');
         }
 
         return $this->render('registration/register.html.twig', [
