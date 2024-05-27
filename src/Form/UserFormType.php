@@ -18,38 +18,16 @@ class UserFormType extends AbstractType
     {
         $builder
             ->add('email', TextType::class, [
-                'label' => 'Email',
                 'disabled' => true, // Prevents editing the email
             ])
             ->add('fio', TextType::class, [
-                'label' => 'ФИО',
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Телефон',
             ])
             ->add('description', TextareaType::class, [
-                'label' => 'Описание',
-            ])
-            ->add('profile_img', FileType::class, [
-                'label' => 'Профильное изображение',
-                'required' => false, // Allow empty profile image field
-            ])
-            ->add('newPassword', PasswordType::class, [
-                'label' => 'New Password',
-                'mapped' => false,
-                'required' => false, // Allow empty password field
-                'constraints' => [
-                    new Length(['min' => 6]),
-                ],
-            ])
-            ->add('confirmPassword', PasswordType::class, [
-                'label' => 'Confirm New Password',
-                'mapped' => false,
-                'required' => false, // Allow empty password field
-                'constraints' => [
-                    new Length(['min' => 6]),
-                ],
             ]);
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

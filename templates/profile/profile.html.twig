@@ -2,20 +2,65 @@
 
 {% block title %}Профиль пользователя{% endblock %}
 
-{% block navbar%}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+{% endblock %}
+
+{% block navbar %}
+    <div class="navBar">
+        <h2>Профиль пользователя</h2>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <div class="profile-info">
-        <h2>Профиль пользователя</h2>
-        <p><strong>ФИО:</strong> {{ app.user.getFio() }}</p>
-        <p><strong>Email:</strong> {{ app.user.getEmail() }}</p>
-        <p><strong>Телефон:</strong> {{ app.user.getPhone() }}</p>
-        <p><strong>Описание:</strong> {{ app.user.getDescription() }}</p>
-        {% if app.user.getProfileImg() %}
-            <img src="{{ app.user.getProfileImg() }}" alt="Профильное изображение">
-        {% endif %}
+    <div class="wrapper">
+        <div class="container">
+            <div class="container-right">
+                <div class="project-image">
+                    {% if app.user.getProfileImg() %}
+                        <img src="{{ app.user.getProfileImg() }}" alt="Профильное изображение">
+                    {% else %}
+                        <label for="profile_img" style="cursor: pointer; display: flex; justify-content: center; align-items: center;">
+                            <span>Нет изображения</span>
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="container-left">
+                {% if is_edit %}
+                    {{ form_start(editForm) }}
+                    <p class="lt">ФИО</p>
+                    {{ form_widget(editForm.fio, {'attr': {'class': 'lp'}}) }}
+                    <p class="lt">Описание</p>
+                    {{ form_widget(editForm.description, {'attr': {'class': 'lp'}}) }}
+                    <p class="lt">Почта</p>
+                    {{ form_widget(editForm.email, {'attr': {'class': 'lp'}}) }}
+                    <p class="lt">Телефон</p>
+                    {{ form_widget(editForm.phone, {'attr': {'class': 'lp'}}) }}
+                    <button type="submit" class="btnPurp">Сохранить</button>
+                    {{ form_end(editForm) }}
+                {% else %}
+                    <p class="lt">ФИО</p>
+                    <p class="lp">{{ app.user.getFio() }}</p>
+                    <p class="lt">Описание</p>
+                    <p class="lp">{{ app.user.getDescription() }}</p>
+                    <p class="lt">Почта</p>
+                    <p class="lp">{{ app.user.getEmail() }}</p>
+                    <p class="lt">Телефон</p>
+                    <p class="lp">{{ app.user.getPhone() }}</p>
+                {% endif %}
+            </div>
+            {% if is_edit == false %}
+            <div class="contactR">
+                {% if not is_edit %}
+                    <a href="{{ path('app_profile_edit') }}" class="btnPurp">Редактировать профиль</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
     </div>
-    <a href="{{ path('app_profile_edit') }}">Редактировать профиль</a>
 {% endblock %}
+
+
+
 
