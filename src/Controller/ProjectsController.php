@@ -38,7 +38,6 @@ class ProjectsController extends AbstractController
             $projectInfo = $project->getProjectInfo();
             $projectInfo->setCreatedAt(new \DateTimeImmutable());
             $projectInfo->setUpdatedAt(new \DateTimeImmutable());
-            $projectInfo->setLikes(0);
 
             $imageFile = $form['projectInfo']['project_img']->getData();
             if ($imageFile) {

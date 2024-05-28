@@ -1,3 +1,4 @@
+/* Основные стили */
 .wrapper {
     padding: 20px 60px;
     display: flex;
@@ -10,7 +11,6 @@
     justify-content: flex-start;
     margin-bottom: 20px;
 }
-
 
 .containerCom {
     display: flex;
@@ -27,9 +27,14 @@
     border-left: 2px solid black;
 }
 
-.contactR a{
+.contactR a, .contactR button {
     margin-bottom: 20px;
     text-align: center;
+}
+
+.contactR button {
+    font-size: 16px;
+    margin-bottom: 20px;
 }
 
 .container-left {
@@ -37,10 +42,9 @@
     margin-right: 20px;
 }
 
-.container-left h1{
+.container-left h1 {
     margin-top: 0;
 }
-
 
 .container-right {
     width: 45%;
@@ -54,12 +58,12 @@
     margin-bottom: 10px;
 }
 
-.details{
+.details {
     display: flex;
     justify-content: flex-start;
 }
 
-.details p{
+.details p {
     margin-right: 54px;
 }
 
@@ -69,11 +73,77 @@ button[type="submit"] {
     font-size: 16px;
 }
 
-form{
+form {
     display: flex;
     flex-direction: column;
 }
 
-form textarea{
+form textarea {
     padding: 10px;
 }
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+#donationFormContainer {
+    margin-top: 20px;
+}
+
+#donationForm label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+#donationForm input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+
