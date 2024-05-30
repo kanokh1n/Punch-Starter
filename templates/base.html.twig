@@ -10,7 +10,7 @@
 <body>
 <header>
     {% block header %}
-        <div class ="head">
+        <div class="head">
             <div class="logo">
                 <a href="/main">
                     <img src="{{ asset('images/logo.png') }}" alt="Лого">
@@ -29,10 +29,41 @@
         </div>
     {% endblock %}
     {% block navbar %}
-
     {% endblock %}
 </header>
 {% block content %}{% endblock %}
+{% block messages %}
+    {% if app.user %}
+        <div class="message-panel">
+            <button id="messageButton" class="btnPurp">Сообщения</button>
+            <div id="messageContainer" class="hidden">
+                <h2>Мои сообщения</h2>
+                <ul>
+                    {% for message in app.user.getReceivedMessages() %}
+                        <li>
+                            <h3>{{ message.getTitle() }}</h3>
+                            <p>{{ message.getContent() }}</p>
+                            <p>От: {{ message.getSenderId().getEmail() }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const messageButton = document.getElementById('messageButton');
+                const messageContainer = document.getElementById('messageContainer');
+
+                messageButton.addEventListener('click', function() {
+                    messageContainer.classList.toggle('hidden');
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+
 <footer>
     <div class="social">
         <a href="/main">
@@ -54,4 +85,5 @@
 {% block javascripts %}{% endblock %} <!-- Переопределяемый блок для внешних скриптов -->
 </body>
 </html>
+
 

@@ -31,11 +31,11 @@
 
             <div class="contactR">
                 <button class="btnPurp" id="donateButton">Пожертвовать</button>
+                <a href="#" class="btnPurp" id="applicationButton">Заявка</a>
                 <a href="#" class="btnPurp">GitHub</a>
                 <a href="#" class="btnPurp">Telegram</a>
                 <a href="#" class="btnPurp">VKontakte</a>
             </div>
-
         </div>
 
         <div class="containerCom">
@@ -69,6 +69,20 @@
                 </form>
             </div>
         </div>
+
+        <!-- Форма для отправки сообщения -->
+        <div id="applicationFormContainer" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" id="closeApplicationModal">&times;</span>
+                <form id="applicationForm" method="post" action="{{ path('send_message', {'projectId': project.getId()}) }}">
+                    <label for="title">Заголовок:</label>
+                    <input type="text" id="title" name="title" required>
+                    <label for="content">Сообщение:</label>
+                    <textarea id="content" name="content" rows="5" required></textarea>
+                    <button type="submit" class="btnPurp">Отправить</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -76,24 +90,41 @@
             const donateButton = document.getElementById('donateButton');
             const closeModal = document.getElementById('closeModal');
             const donationFormContainer = document.getElementById('donationFormContainer');
+            const applicationButton = document.getElementById('applicationButton');
+            const closeApplicationModal = document.getElementById('closeApplicationModal');
+            const applicationFormContainer = document.getElementById('applicationFormContainer');
 
             donateButton.addEventListener('click', function() {
-                console.log('Opening donation form');
                 donationFormContainer.classList.remove('hidden');
                 donationFormContainer.style.display = 'flex';
             });
 
             closeModal.addEventListener('click', function() {
-                console.log('Closing donation form');
                 donationFormContainer.classList.add('hidden');
                 donationFormContainer.style.display = 'none';
             });
 
             window.addEventListener('click', function(event) {
                 if (event.target === donationFormContainer) {
-                    console.log('Closing donation form by clicking outside');
                     donationFormContainer.classList.add('hidden');
                     donationFormContainer.style.display = 'none';
+                }
+            });
+
+            applicationButton.addEventListener('click', function() {
+                applicationFormContainer.classList.remove('hidden');
+                applicationFormContainer.style.display = 'flex';
+            });
+
+            closeApplicationModal.addEventListener('click', function() {
+                applicationFormContainer.classList.add('hidden');
+                applicationFormContainer.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === applicationFormContainer) {
+                    applicationFormContainer.classList.add('hidden');
+                    applicationFormContainer.style.display = 'none';
                 }
             });
         });
@@ -103,6 +134,7 @@
 {% block javascripts %}
     <script src="{{ asset('js/viewProject.js') }}"></script>
 {% endblock %}
+
 
 
 

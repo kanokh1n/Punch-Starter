@@ -66,11 +66,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\OneToMany(targetEntity: UsersMessages::class, mappedBy: 'user_sender', orphanRemoval: true)]
-    private Collection $sendedUsersMessages;
-
     #[ORM\ManyToMany(targetEntity: Likes::class, mappedBy: 'user_id')]
     private Collection $likes;
+
+    #[ORM\OneToMany(mappedBy: 'sender_id', targetEntity: Messages::class)]
+    private Collection $sentMessages;
+
+    #[ORM\OneToMany(mappedBy: 'absorber_id', targetEntity: Messages::class)]
+    private Collection $receivedMessages;
 
 
 
@@ -80,8 +83,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->pledges = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->usersRoles = new ArrayCollection();
-        $this->sendedUsersMessages = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
+    }
+
+    public function __wakeup()
+    {
+        $this->projects = $this->projects ?: new ArrayCollection();
+        $this->pledges = $this->pledges ?: new ArrayCollection();
+        $this->comments = $this->comments ?: new ArrayCollection();
+        $this->usersRoles = $this->usersRoles ?: new ArrayCollection();
+        $this->likes = $this->likes ?: new ArrayCollection();
+        $this->sentMessages = $this->sentMessages ?: new ArrayCollection();
+        $this->receivedMessages = $this->receivedMessages ?: new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -352,35 +367,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UsersMessages>
-     */
-    public function getSendedUsersMessages(): Collection
-    {
-        return $this->sendedUsersMessages;
-    }
-
-    public function addSendedUsersMessage(UsersMessages $sendedUsersMessage): static
-    {
-        if (!$this->sendedUsersMessages->contains($sendedUsersMessage)) {
-            $this->sendedUsersMessages->add($sendedUsersMessage);
-            $sendedUsersMessage->setUserSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSendedUsersMessage(UsersMessages $sendedUsersMessage): static
-    {
-        if ($this->sendedUsersMessages->removeElement($sendedUsersMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($sendedUsersMessage->getUserSender() === $this) {
-                $sendedUsersMessage->setUserSender(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Likes>
      */
@@ -408,4 +394,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection|Messages[]
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    /**
+     * @return Collection|Messages[]
+     */
+    public function getReceivedMessages(): Collection
+    {
+        return $this->receivedMessages;
+    }
 }

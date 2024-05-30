@@ -19,11 +19,14 @@ class Messages
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'sentMessages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $sender_id = null;
 
-    #[ORM\Column]
-    private ?int $status = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'receivedMessages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $absorber_id = null;
+
 
     public function getId(): ?int
     {
@@ -54,26 +57,26 @@ class Messages
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getSenderId(): ?User
     {
-        return $this->created_at;
+        return $this->sender_id;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setSenderId(?User $sender_id): static
     {
-        $this->created_at = $created_at;
+        $this->sender_id = $sender_id;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getAbsorberId(): ?User
     {
-        return $this->status;
+        return $this->absorber_id;
     }
 
-    public function setStatus(int $status): static
+    public function setAbsorberId(?User $absorber_id): static
     {
-        $this->status = $status;
+        $this->absorber_id = $absorber_id;
 
         return $this;
     }
