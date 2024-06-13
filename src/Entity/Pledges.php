@@ -19,7 +19,7 @@ class Pledges
     private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'pledges')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Projects $project_id = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]

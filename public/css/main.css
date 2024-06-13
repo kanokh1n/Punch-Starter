@@ -24,6 +24,12 @@
     flex-direction: column;
 }
 
+.project-image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .project-image img {
     max-width: 100%;
     max-height: 250px;
@@ -48,6 +54,12 @@
     transition: transform 0.3s ease;
 }
 
+.project-details1SubDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .project-details1 button{
     border: none;
     background: none;
@@ -60,6 +72,7 @@
 
 .likes {
     align-self: end;
+    font-size: 30px;
 }
 
 

@@ -34,14 +34,18 @@
                 </div>
                 <div class="project-details1">
                     <a href="{{ path('view_project', {'id': project.id}) }}" class="btn">Подробней</a>
-                    <span class="likes">{{ project.getLikes().count }}</span>
-                    <button class="like-button {% if project.isLikedByUser %}liked{% else %}unliked{% endif %}" data-project-id="{{ project.id }}">
-                        {% if project.isLikedByUser %}
-                            <img src="{{ asset('images/liked.png') }}" alt="Liked">
-                        {% else %}
-                            <img src="{{ asset('images/unliked.png') }}" alt="Unliked">
-                        {% endif %}
-                    </button>
+                    <div class="project-details1SubDiv">
+                        <div>
+                            <span class="likes">{{ project.getLikes().count }}</span>
+                        </div>
+                        <button class="like-button {% if project.isLikedByUser %}liked{% else %}unliked{% endif %}" data-project-id="{{ project.id }}">
+                            {% if project.isLikedByUser %}
+                                <img src="{{ asset('images/liked.png') }}" alt="Liked">
+                            {% else %}
+                                <img src="{{ asset('images/unliked.png') }}" alt="Unliked">
+                            {% endif %}
+                        </button>
+                    </div>
                 </div>
             </div>
         {% endfor %}

@@ -1,6 +1,7 @@
 * {
     font-family: "Helvetica Neue", sans-serif;
 }
+
 /* Общие стили */
 html, body, footer {
     height: 100%;
@@ -109,13 +110,11 @@ nav ul li a {
     color: black;
     text-decoration: none;
     font-size: 18px;
-
 }
 
 nav ul li:hover {
     transform: translateY(-3px);
 }
-
 
 main {
     padding: 20px 60px 20px 60px;
@@ -135,7 +134,7 @@ footer {
     margin-left: 60px;
 }
 
-.social a img  {
+.social a img {
     width: 30px;
     height: auto;
 }
@@ -150,7 +149,6 @@ footer {
     flex-direction: column;
     margin-left: 70px;
     border-left: 2px solid white;
-
 }
 
 .contact-info p {
@@ -159,3 +157,53 @@ footer {
     padding-left: 70px;
     color: white;
 }
+
+/* Стили для панели сообщений */
+.message-panel {
+    position: fixed;
+    bottom: 27px;
+    left: 10px;
+    z-index: 1000;
+}
+
+#messageButton {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+#messageContainer {
+    background: white;
+    border: 2px solid #7B00FF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-button {
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.close-button:hover {
+    color: #FF0000;
+}
+
+

@@ -41,6 +41,13 @@ class ProjectsController extends AbstractController
 
             $imageFile = $form['projectInfo']['project_img']->getData();
             if ($imageFile) {
+                $maxFileSize = 10 * 1024 * 1024;
+
+                if ($imageFile->getSize() > $maxFileSize) {
+                    // Обработка ошибки, если файл слишком большой
+                    throw new \Exception('Размер файла превышает допустимый лимит в 10 МБ.');
+                }
+
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
 
                 $imageDirectory = rtrim($this->getParameter('image_directory'), '/') . '/';

@@ -37,7 +37,10 @@
         <div class="message-panel">
             <button id="messageButton" class="btnPurp">Сообщения</button>
             <div id="messageContainer" class="hidden">
-                <h2>Мои сообщения</h2>
+                <div class="message-header">
+                    <h2>Мои сообщения</h2>
+                    <span id="closeMessageContainer" class="close-button">&times;</span>
+                </div>
                 <ul>
                     {% for message in app.user.getReceivedMessages() %}
                         <li>
@@ -54,15 +57,19 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const messageButton = document.getElementById('messageButton');
                 const messageContainer = document.getElementById('messageContainer');
+                const closeMessageContainer = document.getElementById('closeMessageContainer');
 
                 messageButton.addEventListener('click', function() {
                     messageContainer.classList.toggle('hidden');
+                });
+
+                closeMessageContainer.addEventListener('click', function() {
+                    messageContainer.classList.add('hidden');
                 });
             });
         </script>
     {% endif %}
 {% endblock %}
-
 
 <footer>
     <div class="social">
@@ -85,5 +92,7 @@
 {% block javascripts %}{% endblock %} <!-- Переопределяемый блок для внешних скриптов -->
 </body>
 </html>
+
+
 
 

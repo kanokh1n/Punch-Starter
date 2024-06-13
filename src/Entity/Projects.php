@@ -25,7 +25,7 @@ class Projects
     #[ORM\OneToMany(mappedBy: 'project_id', targetEntity: ProjectsCategories::class, orphanRemoval: true)]
     private Collection $projectsCategories;
 
-    #[ORM\OneToMany(mappedBy: 'project_id', targetEntity: Pledges::class)]
+    #[ORM\OneToMany(mappedBy: 'project_id', targetEntity: Pledges::class, cascade: ['remove'])]
     private Collection $pledges;
 
     #[ORM\OneToMany(mappedBy: 'projects_id', targetEntity: Comments::class, orphanRemoval: true)]
@@ -35,7 +35,7 @@ class Projects
     #[ORM\JoinColumn(nullable: true)]
     private ?string $status = null;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Likes::class)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Likes::class, cascade: ['remove'])]
     private Collection $likes;
 
     public function __construct()
@@ -248,3 +248,4 @@ class Projects
         return false;
     }
 }
+
